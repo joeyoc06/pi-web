@@ -6,5 +6,6 @@
 /.react-router/
 /build/
 
-# local server-side data (recent projects, etc)
-/.data/
+# local server-side data (recent projects, etc); app.db is the tracked exception
+/.data/*
+!/.data/app.db

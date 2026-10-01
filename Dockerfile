@@ -15,6 +15,7 @@ WORKDIR /app
 RUN npm run build
 
 FROM node:24-alpine
+ENV DB_URL=file:/app/.data/app.db
 COPY ./package.json package-lock.json /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build

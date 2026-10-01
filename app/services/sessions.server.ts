@@ -480,7 +480,9 @@ export async function sessionPrompt(
 
   const run = session.prompt(text, {
     ...promptOptions,
-    preflightResult: (accepted) => signalPreflight(accepted),
+    // SDK 0.99 reports "started"/"queued"/"handled", not a boolean.
+    // The hook only runs for accepted prompts; rejections take the settled path.
+    preflightResult: () => signalPreflight(true),
   });
 
   // The rejection is consumed here and turned into a value, so a prompt that
@@ -503,8 +505,8 @@ export async function sessionPrompt(
     return { accepted: true };
   }
 
-  // Awaited only on the failure path, where `prompt()` has already rejected --
-  // pi calls preflightResult(false) immediately before it throws.
+  // Rejected prompts don't invoke preflightResult in the current SDK.
+  // The settled branch of the race above reports them instead.
   const error = await settled;
 
   return {

@@ -13,6 +13,8 @@ import { useEffect } from "react";
 import { Toaster } from "~/components/ui/toast";
 import { store } from "./store/store";
 
+export const meta: Route.MetaFunction = () => [{ title: "Pi" }];
+
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
@@ -59,7 +61,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0b0b0f" />
-        <title>Pi 2</title>
         <Meta />
         <Links />
       </head>

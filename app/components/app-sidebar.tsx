@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+import { FoodNavigation } from "./food/food-navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -96,6 +97,7 @@ export default function AppSidebar({ projects, savedSessionsPromise }: Props) {
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <FoodNavigation />
         <ProjectsSection projects={projects} />
         <SessionsSection savedSessionsPromise={savedSessionsPromise} />
       </SidebarContent>

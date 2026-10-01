@@ -864,7 +864,7 @@ function GrepToolCall({
 
 type EditToolCallProps = {
   toolCall: Pi.ToolCall;
-  toolResult?: Pi.ToolResultMessage<{ patch?: string } | undefined>;
+  toolResult?: Pi.ToolResultMessage;
 };
 
 type EditToolEdit = { oldText: string; newText: string };
@@ -875,7 +875,11 @@ function EditToolCall({ toolCall, toolResult }: EditToolCallProps) {
     return Array.isArray(value) ? (value as EditToolEdit[]) : [];
   }, [toolCall]);
 
-  const patch = useMemo(() => toolResult?.details?.patch, [toolResult]);
+  const patch = useMemo(() => {
+    const details = toolResult?.details;
+    return details && typeof details === "object" && "patch" in details && typeof details.patch === "string"
+      ? details.patch : undefined;
+  }, [toolResult]);
 
   return (
     <Tool>
@@ -929,6 +933,7 @@ function WriteToolCall({
   toolResult,
   partialToolResult,
 }: WriteToolCallProps) {
+  const fileContent = useMemo(() => typeof toolCall.arguments.content === "string" ? toolCall.arguments.content : "", [toolCall.arguments.content]);
   const textContent = useMemo(
     () => getToolResultText(partialToolResult ?? toolResult),
     [toolResult, partialToolResult],
@@ -960,7 +965,7 @@ function WriteToolCall({
         {!textContent ? (
           <div>...</div>
         ) : (
-          <CodeBlock code={toolCall.arguments.content} language={language} />
+          <CodeBlock code={fileContent} language={language} />
         )}
       </ToolContent>
     </Tool>
@@ -984,15 +989,18 @@ function Tool({ children, defaultIsOpen = false }: ToolProps) {
 
 type ToolHeaderProps = {
   title: string;
-  subtitle?: string;
+  subtitle?: unknown;
 };
 
 function ToolHeader({ title, subtitle }: ToolHeaderProps) {
+  // Tool arguments now use the SDK's JsonValue type. A partial streamed call
+  // may not yet contain a string, so don't render an object as React content.
+  const subtitleText = useMemo(() => typeof subtitle === "string" ? subtitle : undefined, [subtitle]);
   return (
     <CollapsibleTrigger className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity group max-w-full">
       <span className="text-foreground">{title}</span>
 
-      <div className="truncate text-muted-foreground grow shrink">{subtitle}</div>
+      <div className="truncate text-muted-foreground grow shrink">{subtitleText}</div>
 
       <ChevronRightIcon className="size-3 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-90 rotate-0" />
     </CollapsibleTrigger>

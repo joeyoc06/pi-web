@@ -5,10 +5,11 @@
  * MAX_PROJECTS entries ordered by recency (newest first). When the cap is
  * reached, the oldest entry is evicted.
  *
- * NOTE: `.data/` must stay gitignored. The tailwind vite plugin triggers a
- * full page reload for any non-ignored file change in the project root, and
- * this file is written from the home action -- an un-ignored `.data/` makes
- * the browser reload `/` mid-redirect and bounce you back to the home page.
+ * NOTE: Runtime metadata in `.data/` must stay ignored; `.data/app.db` is
+ * intentionally tracked and excluded from Vite's watcher in vite.config.ts.
+ * The Tailwind Vite plugin can trigger a full page reload for non-ignored
+ * project-root changes, so writing this file during the home action must not
+ * reload `/` mid-redirect and bounce back to the home page.
  */
 
 import fs from "node:fs";

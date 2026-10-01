@@ -6,30 +6,35 @@
     "pi-web": "./bin/pi-web.js"
   },
   "scripts": {
-    "postinstall": "node ./bin/sync-monaco.js",
+    "postinstall": "node ./bin/env.js && node ./bin/sync-monaco.js && prisma generate",
+    "env": "node ./bin/env.js",
     "sync:monaco": "node ./bin/sync-monaco.js",
-    "prebuild": "node ./bin/sync-monaco.js",
+    "prebuild": "node ./bin/env.js && node ./bin/sync-monaco.js && prisma generate",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "cross-env PORT=5000 react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "predev": "prisma migrate deploy",
+    "prestart": "prisma migrate deploy",
+    "skills:install-sous": "node ./bin/install-sous-skill.js"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
-    "@earendil-works/pi-agent-core": "^0.85.1",
-    "@earendil-works/pi-ai": "^0.85.1",
-    "@earendil-works/pi-coding-agent": "^0.85.1",
+    "@earendil-works/pi-agent-core": "^0.99.2",
+    "@earendil-works/pi-ai": "^0.99.2",
+    "@earendil-works/pi-coding-agent": "^0.99.2",
     "@fontsource-variable/geist": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@monaco-editor/react": "^4.7.0",
+    "@prisma/client": "6.18.0",
     "@radix-ui/react-use-controllable-state": "^1.2.6",
     "@react-router/node": "^8",
     "@react-router/serve": "^8",
     "@shadcn/react": "^0.2.1",
     "@shikijs/monaco": "^4.4.3",
     "@streamdown/cjk": "^1.0.3",
-    "@streamdown/code": "^1.1.1",
+    "@streamdown/code": "^2.0.0",
     "@streamdown/math": "^1.0.2",
     "@streamdown/mermaid": "^1.0.2",
     "@types/lodash-es": "^4.17.12",
@@ -49,6 +54,9 @@
     "motion": "^13.1.0",
     "nova-cache": "1.0.0-beta.6",
     "object-path-immutable": "^4.1.2",
+    "pm2": "^7.0.4",
+    "prisma": "6.18.0",
+    "prisma-adapter-node-sqlite": "0.0.1",
     "react": "^19.2.7",
     "react-day-picker": "^10.0.1",
     "react-dom": "^19.2.7",
@@ -72,7 +80,11 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "tailwindcss": "^4.3.3",
+    "tsx": "4.20.6",
     "typescript": "^5.9.3",
     "vite": "^8.0.3"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   }
 }

@@ -195,8 +195,8 @@ async function fetchLatestVersion(projectDir, name) {
 /**
  * `.data/update-check.json`.
  *
- * `.data/` is gitignored and excluded from vite's watcher, so writing here
- * cannot trigger a dev-server reload. See the note in
+ * This file remains gitignored, and `.data/` is excluded from Vite's watcher,
+ * so writing here cannot trigger a dev-server reload. See the note in
  * `app/services/projects.server.ts`.
  *
  * `declined` needs no expiry of its own: when the date rolls over `checkedOn`

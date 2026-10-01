@@ -8,7 +8,9 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   server: {
+    allowedHosts: ["omarchy.tail1eb3a2.ts.net"],
     watch: {
+      // SQLite checkpoints update the tracked .data/app.db; don't reload on them.
       ignored: [".data/**/*"],
     },
   },
