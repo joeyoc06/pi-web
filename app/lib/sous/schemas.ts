@@ -91,10 +91,23 @@ export const httpUrlSchema = z
   .url()
   .max(2048)
   .refine(
-    (value) => ["http:", "https:"].includes(new URL(value).protocol),
+    (value) => {
+      try {
+        return ["http:", "https:"].includes(new URL(value).protocol);
+      } catch {
+        return false;
+      }
+    },
     "Use an http or https URL.",
   );
-export const imageUrlSchema = httpUrlSchema;
+const localImageUrlSchema = z
+  .string()
+  .max(2048)
+  .regex(
+    /^\/food\/images\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpg|png|gif|webp)$/,
+    "Use a valid uploaded image URL.",
+  );
+export const imageUrlSchema = z.union([httpUrlSchema, localImageUrlSchema]);
 const recipeFields = {
   title: name,
   slug: z

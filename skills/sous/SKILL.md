@@ -35,6 +35,26 @@ node scripts/recipe-api.mjs recipes add < /tmp/recipe.json
 
 Every operation prints the server's JSON envelope and exits nonzero on failure. `recipes` and `ingredients` both support `search`, `get`, `add`, `update`, and `delete`. Updates take an ID plus JSON on stdin. Recipe DELETE may take `{"expectedUpdatedAt":"..."}` on stdin. Use `curl` if preferred.
 
+### Image uploads
+
+Recipe photos can be uploaded and stored locally in the pi-web server. When adding or editing a recipe, either:
+
+1. **Upload a file** to `POST /api/sous/upload-image`:
+   - **Input**: multipart/form-data with `file` (image file) and `slug` (recipe slug)
+   - **Output**: `{ "ok": true, "data": { "imageUrl": "/food/images/{slug}.{ext}" } }`
+   - **Formats**: JPEG, PNG, GIF, or WebP (max 5MB)
+   - **Behavior**: Overwrites existing image with same slug
+   - **Example**:
+     ```bash
+     curl -F "file=@photo.jpg" -F "slug=garlic-butter-shrimp" \
+       http://localhost:5000/api/sous/upload-image
+     ```
+   - Store the returned `imageUrl` in the recipe's `imageUrl` field
+
+2. **Provide an external URL**: Pass `imageUrl: "https://..."` directly in the recipe POST/PUT
+
+Images stored locally use paths like `/food/images/recipe-slug.jpg`. External URLs starting with `http://` or `https://` are supported. The `imageUrl` field stores either type transparently. Images are automatically deleted when their recipe is deleted.
+
 ### Import a recipe URL
 
 1. Search by recipe title/slug first. A similar title is a candidate, not proof of a duplicate. Do not overwrite an existing recipe without Joey's direction.

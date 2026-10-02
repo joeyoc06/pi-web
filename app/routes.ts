@@ -23,6 +23,7 @@ export default [
   ]),
   route("food/import", "routes/food/import.ts"),
   route("api/sous/recipes", "routes/api/sous/recipes.ts"),
+  route("api/sous/upload-image", "routes/api/sous/upload-image.ts"),
   route("api/sous/recipes/:id", "routes/api/sous/recipe.ts"),
   route("api/sous/ingredients", "routes/api/sous/ingredients.ts"),
   route("api/sous/ingredients/:id", "routes/api/sous/ingredient.ts"),

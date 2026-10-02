@@ -12,6 +12,7 @@ import { normalizeName, toRecipe, toIngredient } from "./mappers.server";
 import { SousError } from "./errors.server";
 import { resolveIngredient } from "./ingredients.server";
 import { assertNotReferenced, validateReferences } from "./references.server";
+import { deleteImageFile } from "./image-upload.server";
 
 export async function searchRecipes(input: unknown = {}) {
   const q = recipeSearchSchema.parse(input);
@@ -210,6 +211,8 @@ export function deleteRecipe(id: string, input: unknown = {}) {
       assertFresh(row.updatedAt, parsed.expectedUpdatedAt);
       await assertNotReferenced(tx, "recipe", id);
       await tx.recipe.delete({ where: { id } });
+      // Clean up associated image file if it exists
+      deleteImageFile(row.imageUrl);
       return { id };
     },
     { maxWait: 10000, timeout: 15000 },

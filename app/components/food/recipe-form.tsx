@@ -46,7 +46,7 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
 } from "~/components/ui/alert-dialog";
-import { TextField, SelectField } from "./recipe-form-fields";
+import { TextField, SelectField, ImageUploadField } from "./recipe-form-fields";
 import { InputError, SaveErrors } from "./errors";
 import {
   RecipeIngredientRow,
@@ -211,6 +211,18 @@ export function RecipeForm({ recipe, catalog }: Props) {
       }));
     },
     [slugEdited],
+  );
+  const handleImageUrlChange = useCallback(
+    (value: string) => {
+      setDraft((prev) => ({
+        ...prev,
+        fields: {
+          ...prev.fields,
+          imageUrl: value,
+        },
+      }));
+    },
+    [],
   );
   const addIngredient = useCallback(
     () =>
@@ -488,14 +500,11 @@ export function RecipeForm({ recipe, catalog }: Props) {
                       errors={errors}
                     />
                   </FieldGroup>
-                  <TextField
-                    name="imageUrl"
-                    label="Image URL (optional)"
-                    type="url"
-                    value={draft.fields.imageUrl}
-                    onChange={handleField}
+                  <ImageUploadField
+                    imageUrl={draft.fields.imageUrl}
+                    slug={draft.fields.slug}
+                    onImageUrlChange={handleImageUrlChange}
                     errors={errors}
-                    placeholder="https://…"
                   />
                   <TextField
                     name="tags"
